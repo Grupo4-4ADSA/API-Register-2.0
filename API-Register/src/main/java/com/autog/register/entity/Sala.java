@@ -3,6 +3,8 @@ package com.autog.register.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Sala")
@@ -25,8 +27,17 @@ public class Sala {
     @JoinColumn(name = "fkPredio", referencedColumnName = "idPredio")
     private Predio predio;
 
+    @OneToMany(mappedBy = "sala")
+    private List<Agendamento> agendamentos = new ArrayList();
 
     // Relacionamento com predio, clnbox e agendamento
+    public List<Agendamento> getAgendamentos() {
+        return agendamentos;
+    }
+
+    public void setAgendamentos(List<Agendamento> agendamentos) {
+        this.agendamentos = agendamentos;
+    }
 
     public Integer getIdRoom() {
         return idRoom;
