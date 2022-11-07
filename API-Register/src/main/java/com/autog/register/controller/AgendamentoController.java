@@ -1,5 +1,6 @@
 package com.autog.register.controller;
 
+import com.autog.register.dto.request.EquipamentoRequest;
 import com.autog.register.entity.Agendamento;
 import com.autog.register.service.AgendamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,15 @@ public class AgendamentoController {
     @GetMapping("/predio/{idPredio}")
     public ResponseEntity listarAgendamentos(@PathVariable Integer idPredio) {
         return service.listarAgendamentos(idPredio);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity editarAgendamento(@PathVariable Integer id, @RequestBody @Valid Agendamento request) {
+        return service.editarAgendamento(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteEquipmentById(@PathVariable Integer id) {
+        return service.deletarAgendamento(id);
     }
 }

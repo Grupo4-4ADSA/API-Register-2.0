@@ -1,5 +1,6 @@
 package com.autog.register.service;
 
+import com.autog.register.dto.request.EquipamentoRequest;
 import com.autog.register.entity.Agendamento;
 import com.autog.register.entity.Equipamento;
 import com.autog.register.repository.AgendamentoRepository;
@@ -27,5 +28,21 @@ public class AgendamentoService {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(agendamentos);
+    }
+
+    public ResponseEntity editarAgendamento(Integer id, Agendamento request) {
+        if (repository.existsById(id)) {
+            repository.updateEquipamento(id, request.getHorario(),request.getData());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    public ResponseEntity deletarAgendamento(Integer id) {
+        if (repository.existsById(id)) {
+            repository.deletarAgendamento(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
