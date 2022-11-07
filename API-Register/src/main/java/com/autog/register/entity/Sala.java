@@ -1,5 +1,7 @@
 package com.autog.register.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -31,6 +33,7 @@ public class Sala {
     private List<Agendamento> agendamentos = new ArrayList();
 
     // Relacionamento com predio, clnbox e agendamento
+    @JsonIgnore
     public List<Agendamento> getAgendamentos() {
         return agendamentos;
     }

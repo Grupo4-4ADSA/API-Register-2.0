@@ -4,10 +4,7 @@ import com.autog.register.entity.Agendamento;
 import com.autog.register.service.AgendamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,5 +17,10 @@ public class AgendamentoController {
     @PostMapping
     public ResponseEntity registrarAgendamento(@RequestBody @Valid Agendamento novoAgendamento) {
         return service.registrarAgendamento(novoAgendamento);
+    }
+
+    @GetMapping("/predio/{idPredio}")
+    public ResponseEntity listarAgendamentos(@PathVariable Integer idPredio) {
+        return service.listarAgendamentos(idPredio);
     }
 }
