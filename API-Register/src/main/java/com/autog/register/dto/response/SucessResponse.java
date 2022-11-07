@@ -1,13 +1,19 @@
 package com.autog.register.dto.response;
 
 public class SucessResponse {
-    private Boolean sucesso;
+    private String msg;
+    private Object objeto;
 
-    public SucessResponse(Boolean sucesso) {
-        this.sucesso = sucesso;
+    public SucessResponse(String msg, Object objeto) {
+        this.msg = msg;
+        this.objeto = objeto;
     }
 
-    public Boolean getSucesso() {
-        return sucesso;
+    public String getMsg() {
+        return msg;
+    }
+
+    public Object getObjeto() {
+        return objeto;
     }
 }

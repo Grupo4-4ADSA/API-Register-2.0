@@ -24,7 +24,7 @@ public class SalaService {
     public ResponseEntity registerRoom(Sala newRoom) {
         repository.save(newRoom);
 
-        return status(201).body(new SucessResponse(true));
+        return status(201).body(new SucessResponse("Sala cadastrada com sucesso!", newRoom));
     }
 
 //    public ResponseEntity listWithClnBox(Integer idBuilding) {
