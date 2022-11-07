@@ -3,6 +3,7 @@ package com.autog.register.service;
 import com.autog.register.dto.request.SalaRequest;
 import com.autog.register.dto.response.SalaComClnBox;
 import com.autog.register.dto.response.SalaResponse;
+import com.autog.register.dto.response.SucessResponse;
 import com.autog.register.entity.Sala;
 import com.autog.register.repository.SalaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ public class SalaService {
 
     public ResponseEntity registerRoom(Sala newRoom) {
         repository.save(newRoom);
-        return status(201).build();
+
+        return status(201).body(new SucessResponse("Sala cadastrada com sucesso!", newRoom));
     }
 
 //    public ResponseEntity listWithClnBox(Integer idBuilding) {
