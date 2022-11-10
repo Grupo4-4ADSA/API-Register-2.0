@@ -1,5 +1,7 @@
 package com.autog.register.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +22,29 @@ public class Predio {
     @JoinColumn(name = "fkEmpresa", referencedColumnName = "idEmpresa")
     private Empresa empresa;
 
+    public List<Sala> getSalas() {
+        return salas;
+    }
+
+    public void setSalas(List<Sala> salas) {
+        this.salas = salas;
+    }
+
+    public List<Gestor> getGestores() {
+        return gestores;
+    }
+
+    public void setGestores(List<Gestor> gestores) {
+        this.gestores = gestores;
+    }
+
     @OneToMany(mappedBy = "predio")
     private List<Sala> salas = new ArrayList();
 
-    // Relacionamento com relatorio
+    @OneToMany(mappedBy = "predio")
+    private List<Gestor> gestores = new ArrayList();
 
+    // Relacionamento com relatorio
 
     public Integer getIdPredio() {
         return idPredio;
@@ -49,6 +69,4 @@ public class Predio {
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
     }
-
-
 }

@@ -44,9 +44,6 @@ public class Empresa {
     private boolean ativa;
 
     @OneToMany(mappedBy = "empresa")
-    private List<Gestor> gestores = new ArrayList();
-
-    @OneToMany(mappedBy = "empresa")
     private List<Predio> predios = new ArrayList();
 
     public Integer getIdEmpresa() {

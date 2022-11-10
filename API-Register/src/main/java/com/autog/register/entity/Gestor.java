@@ -1,5 +1,7 @@
 package com.autog.register.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -25,8 +27,8 @@ public class Gestor {
     private String senha;
 
     @ManyToOne
-    @JoinColumn(name = "fkEmpresa", referencedColumnName = "idEmpresa")
-    private Empresa empresa;
+    @JoinColumn(name = "fkPredio", referencedColumnName = "idPredio")
+    private Predio predio;
 
     public Integer getIdGestor() {
         return idGestor;
@@ -52,6 +54,7 @@ public class Gestor {
         this.login = login;
     }
 
+    @JsonIgnore
     public String getSenha() {
         return senha;
     }
@@ -60,11 +63,11 @@ public class Gestor {
         this.senha = senha;
     }
 
-    public Empresa getEmpresa() {
-        return empresa;
+    public Predio getPredio() {
+        return predio;
     }
 
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
+    public void setPreio(Predio predio) {
+        this.predio = predio;
     }
 }
