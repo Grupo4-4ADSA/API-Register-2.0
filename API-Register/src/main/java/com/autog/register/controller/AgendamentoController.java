@@ -17,6 +17,7 @@ public class AgendamentoController {
 
     @PostMapping
     public ResponseEntity registrarAgendamento(@RequestBody @Valid Agendamento novoAgendamento) {
+
         return service.registrarAgendamento(novoAgendamento);
     }
 
