@@ -18,6 +18,13 @@ public class Predio {
     @Column(name = "nome")
     private String nomePredio;
 
+    @Column(name = "andares")
+    private Integer andares;
+
+    @Column(name = "subsolos")
+    private Integer subsolos;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "fkEmpresa", referencedColumnName = "idEmpresa")
     private Empresa empresa;
@@ -38,9 +45,11 @@ public class Predio {
         this.gestores = gestores;
     }
 
+    @JsonIgnore
     @OneToMany(mappedBy = "predio")
     private List<Sala> salas = new ArrayList();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "predio")
     private List<Gestor> gestores = new ArrayList();
 
@@ -68,5 +77,21 @@ public class Predio {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public Integer getAndares() {
+        return andares;
+    }
+
+    public void setAndares(Integer andares) {
+        this.andares = andares;
+    }
+
+    public Integer getSubsolos() {
+        return subsolos;
+    }
+
+    public void setSubsolos(Integer subsolos) {
+        this.subsolos = subsolos;
     }
 }
