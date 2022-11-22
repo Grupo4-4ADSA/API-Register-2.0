@@ -14,7 +14,6 @@ public class Equipamento {
     @Column(name = "idEquipamento")
     private Integer idEquipamento;
 
-    @NotBlank
     @Column(name = "nome")
     private String nome;
 
