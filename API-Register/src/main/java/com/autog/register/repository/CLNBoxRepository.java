@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface CLNBoxRepository extends JpaRepository<CLNBox, Integer> {
 
@@ -23,6 +24,10 @@ public interface CLNBoxRepository extends JpaRepository<CLNBox, Integer> {
     @Query("UPDATE CLNBox c SET c.ip = ?2 WHERE c.idCLNBox = ?1")
     void updateIpCLNBox(Integer id,  String ip);
 
-
+    @Transactional
+    @Modifying
+    @Query("select * from CLNBox c join Sala s on c.fkSala = s.idSala join " +
+            "Predio p on s.fkPredio = p.idPredio where idPredio = ?1;")
+    List<CLNBox> filtrandoCLNBoxConectadosComEquipamentosDoPredio(Integer idPredio);
 
 }

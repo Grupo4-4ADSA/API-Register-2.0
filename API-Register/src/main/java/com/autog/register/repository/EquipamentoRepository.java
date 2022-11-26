@@ -1,5 +1,6 @@
 package com.autog.register.repository;
 
+import com.autog.register.entity.CLNBox;
 import com.autog.register.entity.Equipamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,4 +31,11 @@ public interface EquipamentoRepository extends JpaRepository<Equipamento, Intege
 
     @Query("SELECT e FROM Equipamento e WHERE idEquipamento = ?1")
     List<Equipamento> getEquipamento(Integer idEquipment);
+
+    @Transactional
+    @Modifying
+    @Query("SELECT * FROM Equipamento e INNER JOIN CLNBox cln on cln.idCLNBox = e.fkCLNBox " +
+            " WHERE e.fkCLNBox IN (SELECT idCLNBox FROM CLNBox c INNER JOIN Sala s on c.fkSala = " +
+            "s.idSala INNER JOIN Predio p on s.fkPredio = p.idPredio WHERE idPredio = ?1);")
+    List<Equipamento> filtrandoEquipamentoConectadosComCLNBox(Integer idPredio);
 }

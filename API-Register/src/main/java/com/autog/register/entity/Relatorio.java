@@ -20,11 +20,28 @@ public class Relatorio {
     private String nomeArquivo;
 
     // Relacionamento com predio
+    @ManyToOne
+    @JoinColumn(name = "fkPredio", referencedColumnName = "idPredio")
+    private Predio predio;
+
 
     public Relatorio() {
     }
 
-    public Relatorio(String empresaContratada, String dataRelatorio, String bandeira, String gestorResponsavel, String empresa, String cnpj, Double totalKwm, Double totalReais, String nomeArquivo) {
+//    public Relatorio(String empresaContratada, String dataRelatorio, String bandeira, String gestorResponsavel, String empresa, String cnpj, Double totalKwm, Double totalReais, String nomeArquivo) {
+//        this.empresaContratada = empresaContratada;
+//        this.dataRelatorio = dataRelatorio;
+//        this.bandeira = bandeira;
+//        this.gestorResponsavel = gestorResponsavel;
+//        this.empresa = empresa;
+//        this.cnpj = cnpj;
+//        this.totalKwm = totalKwm;
+//        this.totalReais = totalReais;
+//        this.nomeArquivo = nomeArquivo;
+//
+//    }
+
+    public Relatorio(String empresaContratada, String dataRelatorio, String bandeira, String gestorResponsavel, String empresa, String cnpj, Double totalKwm, Double totalReais, String nomeArquivo, Predio predio) {
         this.empresaContratada = empresaContratada;
         this.dataRelatorio = dataRelatorio;
         this.bandeira = bandeira;
@@ -34,7 +51,7 @@ public class Relatorio {
         this.totalKwm = totalKwm;
         this.totalReais = totalReais;
         this.nomeArquivo = nomeArquivo;
-
+        this.predio = predio;
     }
 
     public Integer getIdRelatorio() {
