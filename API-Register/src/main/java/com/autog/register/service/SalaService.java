@@ -27,10 +27,10 @@ public class SalaService {
         return status(201).body(new SucessResponse("Sala cadastrada com sucesso!", newRoom));
     }
 
-//    public ResponseEntity listWithClnBox(Integer idBuilding) {
-//        List<SalaComClnBox> selectedList = repository.selectedListWithClnBox(idBuilding);
-//        return selectedList.isEmpty() ? noContent().build() : ok().body(selectedList);
-//    }
+    public ResponseEntity listWithClnBox(Integer idBuilding) {
+        List<SalaComClnBox> selectedList = repository.selectedListWithClnBox(idBuilding);
+        return selectedList.isEmpty() ? noContent().build() : ok().body(selectedList);
+    }
 
     public ResponseEntity listAllRooms(Integer idBuilding) {
         List<SalaResponse> selectedList = repository.selectedList(idBuilding);
