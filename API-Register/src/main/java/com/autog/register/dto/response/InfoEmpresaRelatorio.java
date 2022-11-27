@@ -12,13 +12,17 @@ public class InfoEmpresaRelatorio {
 //    private Double totalKwm;
 //    private Double totalValor;
 
-    public InfoEmpresaRelatorio(String nameManager, String corporateName, String cnpj, String nameBuilding, String publicPlace, Integer number, String cep) {
-        this.nomeGestor = nameManager;
-        this.nomeEmpresa = corporateName;
+
+    public InfoEmpresaRelatorio(String nomeGestor, String nomeEmpresa, String cnpj, String nomePredio) {
+        this.nomeGestor = nomeGestor;
+        this.nomeEmpresa = nomeEmpresa;
         this.cnpj = cnpj;
-        this.nomePredio = nameBuilding;
-        this.enderecoPredio = publicPlace;
-        this.numeroEnderecoPredio = number;
+        this.nomePredio = nomePredio;
+    }
+
+    public InfoEmpresaRelatorio(String enderecoPredio, Integer numeroEnderecoPredio, String cep) {
+        this.enderecoPredio = enderecoPredio;
+        this.numeroEnderecoPredio = numeroEnderecoPredio;
         this.cep = cep;
     }
 

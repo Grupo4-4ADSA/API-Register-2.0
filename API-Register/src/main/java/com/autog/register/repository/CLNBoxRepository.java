@@ -26,8 +26,8 @@ public interface CLNBoxRepository extends JpaRepository<CLNBox, Integer> {
 
     @Transactional
     @Modifying
-    @Query("select * from CLNBox c join Sala s on c.fkSala = s.idSala join " +
-            "Predio p on s.fkPredio = p.idPredio where idPredio = ?1;")
+    @Query(nativeQuery = true, value="select * from CLNBox c join Sala s on c.fkSala = s.idSala join " +
+            "Predio p on s.fkPredio = p.idPredio where idPredio = ?1")
     List<CLNBox> filtrandoCLNBoxConectadosComEquipamentosDoPredio(Integer idPredio);
 
 }

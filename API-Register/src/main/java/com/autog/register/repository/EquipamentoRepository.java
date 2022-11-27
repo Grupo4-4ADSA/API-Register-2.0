@@ -34,7 +34,7 @@ public interface EquipamentoRepository extends JpaRepository<Equipamento, Intege
 
     @Transactional
     @Modifying
-    @Query("SELECT * FROM Equipamento e INNER JOIN CLNBox cln on cln.idCLNBox = e.fkCLNBox " +
+    @Query(nativeQuery = true, value="SELECT * FROM Equipamento e INNER JOIN CLNBox cln on cln.idCLNBox = e.fkCLNBox " +
             " WHERE e.fkCLNBox IN (SELECT idCLNBox FROM CLNBox c INNER JOIN Sala s on c.fkSala = " +
             "s.idSala INNER JOIN Predio p on s.fkPredio = p.idPredio WHERE idPredio = ?1);")
     List<Equipamento> filtrandoEquipamentoConectadosComCLNBox(Integer idPredio);
