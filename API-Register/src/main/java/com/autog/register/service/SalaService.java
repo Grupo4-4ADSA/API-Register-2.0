@@ -32,6 +32,11 @@ public class SalaService {
         return selectedList.isEmpty() ? noContent().build() : ok().body(selectedList);
     }
 
+    public ResponseEntity listarSalasSemClnBox(Integer idBuilding) {
+        List<SalaResponse> selectedList = repository.selecionarSalasSemClnBox(idBuilding);
+        return selectedList.isEmpty() ? noContent().build() : ok().body(selectedList);
+    }
+
     public ResponseEntity listAllRooms(Integer idBuilding) {
         List<SalaResponse> selectedList = repository.selectedList(idBuilding);
         return selectedList.isEmpty() ? noContent().build() : ok().body(selectedList);

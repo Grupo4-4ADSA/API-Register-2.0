@@ -16,6 +16,9 @@ public interface SalaRepository extends JpaRepository<Sala, Integer> {
     @Query("SELECT new com.autog.register.dto.response.SalaResponse(r.idRoom, r.name, r.floor) FROM Sala r where predio.idPredio = ?1")
     List<SalaResponse> selectedList(Integer idBuilding);
 
+    @Query("SELECT new com.autog.register.dto.response.SalaResponse(s.idRoom, s.name, s.floor) FROM Sala s JOIN CLNBox c ON s.idRoom != c.sala.idRoom AND s.predio.idPredio = ?1")
+    List<SalaResponse> selecionarSalasSemClnBox(Integer idBuilding);
+
     @Query("SELECT new com.autog.register.dto.response.SalaComClnBox(r.idRoom, r.name, r.floor, r.clnBox.idCLNBox) FROM Sala r where predio.idPredio = ?1")
     List<SalaComClnBox> selectedListWithClnBox(Integer idPredio);
 

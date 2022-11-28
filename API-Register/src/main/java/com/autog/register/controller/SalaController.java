@@ -26,6 +26,11 @@ public class SalaController {
         return service.listWithClnBox(idBuilding);
     }
 
+    @GetMapping("/apenas/salas/{idBuilding}")
+    public ResponseEntity listarSalasSemClnBox(@PathVariable Integer idBuilding) {
+        return service.listarSalasSemClnBox(idBuilding);
+    }
+
     @GetMapping("/all/{idBuilding}")
     public ResponseEntity listAllRooms(@PathVariable Integer idBuilding) {
         return service.listAllRooms(idBuilding);
