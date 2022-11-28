@@ -1,9 +1,13 @@
 package com.autog.register.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Equipamento")
@@ -44,8 +48,19 @@ public class Equipamento {
     @JoinColumn(name = "fkCLNBox", referencedColumnName = "idCLNBox")
     private CLNBox clnBox;
 
+    @OneToMany(mappedBy = "equipamento")
+    private List<Registro> registros = new ArrayList();
+
     // Relacionamento com sensoPresenca, sensorLuminosidade
 
+    @JsonIgnore
+    public Registro getRegistro() {
+        return registros.get(registros.size() - 1);
+    }
+
+    public void setRegistros(List<Registro> registros) {
+        this.registros = registros;
+    }
 
     public Integer getIdEquipamento() {
         return idEquipamento;
