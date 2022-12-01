@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EquipamentoRepository extends JpaRepository<Equipamento, Integer> {
@@ -25,8 +26,8 @@ public interface EquipamentoRepository extends JpaRepository<Equipamento, Intege
 
     @Transactional
     @Modifying
-    @Query("UPDATE Equipamento e SET e.nome = ?2 WHERE e.idEquipamento = ?1")
-    void updateEquipamento(Integer id, String nome);
+    @Query("UPDATE Equipamento e SET e.tipo = ?2, e.instalacao = ?3, e.vidaUtil = ?4, e.potencia = ?5, e.qtdEquipamento = ?6 WHERE e.idEquipamento = ?1")
+    void updateEquipamento(Integer id, String tipo, LocalDate instalacao, Integer vidaUtil, Integer potencia, Integer qtdEquipamento);
 
     @Query("SELECT e FROM Equipamento e WHERE idEquipamento = ?1")
     List<Equipamento> getEquipamento(Integer idEquipment);

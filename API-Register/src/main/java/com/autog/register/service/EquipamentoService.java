@@ -60,9 +60,16 @@ public class EquipamentoService {
         return date;
     }
 
-    public ResponseEntity editEquipment(Integer id, Equipamento request) {
+    public ResponseEntity editEquipment(Integer id, EquipamentoRequest request) {
         if (repository.existsById(id)) {
-            repository.save(request);
+            repository.updateEquipamento(
+                    id,
+                    request.getTipo(),
+                    request.getInstalacao(),
+                    request.getVidaUtil(),
+                    request.getPotencia(),
+                    request.getQtdEquipamento()
+            );
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();

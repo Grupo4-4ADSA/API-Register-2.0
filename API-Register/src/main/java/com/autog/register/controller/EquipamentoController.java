@@ -48,7 +48,7 @@ public class EquipamentoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity editEquipment(@PathVariable Integer id, @RequestBody @Valid Equipamento request) {
+    public ResponseEntity editEquipment(@PathVariable Integer id, @RequestBody @Valid EquipamentoRequest request) {
         return service.editEquipment(id, request);
     }
 
