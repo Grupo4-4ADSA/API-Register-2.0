@@ -1,5 +1,7 @@
 package com.autog.register.entity;
 
+import com.autog.register.service.FiltroSingleton;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -53,9 +55,12 @@ public class Equipamento {
 
     // Relacionamento com sensoPresenca, sensorLuminosidade
 
-    @JsonIgnore
     public Registro getRegistro() {
-        return registros.get(registros.size() - 1);
+        if (FiltroSingleton.getInstancia().isEquipamentoComRegistro()){
+            return registros.get(registros.size() - 1);
+        } else {
+            return null;
+        }
     }
 
     public void setRegistros(List<Registro> registros) {

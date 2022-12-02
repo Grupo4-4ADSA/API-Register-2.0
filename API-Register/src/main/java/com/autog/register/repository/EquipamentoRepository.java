@@ -1,5 +1,6 @@
 package com.autog.register.repository;
 
+import com.autog.register.dto.response.EquipamentoComRegistro;
 import com.autog.register.entity.Equipamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

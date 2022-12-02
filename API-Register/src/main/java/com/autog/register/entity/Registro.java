@@ -24,6 +24,7 @@ public class Registro {
 
     @ManyToOne
     @NotNull
+    @JsonIgnore
     @JoinColumn(name = "fkEquipamento", referencedColumnName = "idEquipamento")
     private Equipamento equipamento;
 

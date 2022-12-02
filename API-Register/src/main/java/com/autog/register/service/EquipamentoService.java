@@ -1,6 +1,7 @@
 package com.autog.register.service;
 
 import com.autog.register.dto.request.EquipamentoRequest;
+import com.autog.register.dto.response.EquipamentoComRegistro;
 import com.autog.register.dto.response.EquipamentoResponse;
 import com.autog.register.entity.Equipamento;
 import com.autog.register.repository.EquipamentoRepository;
@@ -36,12 +37,23 @@ public class EquipamentoService {
     }
 
     public ResponseEntity getEquipmentBySala(Integer idSala) {
+        FiltroSingleton.getInstancia().setEquipamentoComRegistro(false);
         List<Equipamento> equipments = repository.getEquipamentoBySala(idSala);
 
         if (equipments.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(equipments);
+    }
+
+    public ResponseEntity listarSalasComUltimoRegistro(Integer idSala) {
+        FiltroSingleton.getInstancia().setEquipamentoComRegistro(true);
+        List<Equipamento> equipamentos = repository.getEquipamentoBySala(idSala);
+
+        if (equipamentos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(equipamentos);
     }
 
     public ResponseEntity getEquipment(Integer idEquipamento) {
