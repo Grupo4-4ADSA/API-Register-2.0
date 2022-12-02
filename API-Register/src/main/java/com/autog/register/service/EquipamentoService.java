@@ -74,7 +74,14 @@ public class EquipamentoService {
 
     public ResponseEntity editEquipment(Integer id, EquipamentoRequest request) {
         if (repository.existsById(id)) {
-            repository.updateEquipamento(id, request.getName());
+            repository.updateEquipamento(
+                    id,
+                    request.getTipo(),
+                    request.getInstalacao(),
+                    request.getVidaUtil(),
+                    request.getPotencia(),
+                    request.getQtdEquipamento()
+            );
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
