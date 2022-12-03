@@ -1,6 +1,9 @@
 package com.autog.register.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,47 +13,51 @@ public class Registro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idRegistro")
-    private Integer idRegister;
+    private Integer idRegistro;
 
     @Column(name = "ligado")
-    private boolean on;
+    private boolean ligado;
 
+    @NotNull
     @Column(name = "data")
-    private LocalDateTime date;
+    private LocalDateTime data;
 
     @ManyToOne
+    @NotNull
+    @JsonIgnore
     @JoinColumn(name = "fkEquipamento", referencedColumnName = "idEquipamento")
-    private Equipamento equipment;
+    private Equipamento equipamento;
 
-    public Integer getIdRegister() {
-        return idRegister;
+    public Integer getIdRegistro() {
+        return idRegistro;
     }
 
-    public void setIdRegister(Integer idRegister) {
-        this.idRegister = idRegister;
+    public void setIdRegistro(Integer idRegistro) {
+        this.idRegistro = idRegistro;
     }
 
-    public boolean isOn() {
-        return on;
+    public boolean isLigado() {
+        return ligado;
     }
 
-    public void setOn(boolean on) {
-        this.on = on;
+    public void setLigado(boolean ligado) {
+        this.ligado = ligado;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getData() {
+        return data;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setData(LocalDateTime data) {
+        this.data = data;
     }
 
-    public Equipamento getEquipment() {
-        return equipment;
+
+    public Equipamento getEquipamento() {
+        return equipamento;
     }
 
-    public void setEquipment(Equipamento equipment) {
-        this.equipment = equipment;
+    public void setEquipamento(Equipamento equipamento) {
+        this.equipamento = equipamento;
     }
 }

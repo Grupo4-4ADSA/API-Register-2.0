@@ -39,52 +39,56 @@ public class FormattedReportService {
 
         try {
             if (!(repository.existsById(data.getIdPredio()))) {
-                Double totalKwm = 0.0;
-                Double totalReais = 0.0;
+                if (registroDeMesExiste(registerRepository, data)) {
+                    Double totalKwm = 0.0;
+                    Double totalReais = 0.0;
 
-                List<InfoEmpresaRelatorio> dadosEmpresaPredioGestor = predioRepository.infoPredioEmpresaGestor(data.getIdPredio());
-                InfoEmpresaRelatorio dadosEmpresaEndereco = enderecoRepository.infoEmpresaEndereco(data.getIdPredio());
+                    List<InfoEmpresaRelatorio> dadosEmpresaPredioGestor = predioRepository.infoPredioEmpresaGestor(data.getIdPredio());
+                    InfoEmpresaRelatorio dadosEmpresaEndereco = enderecoRepository.infoEmpresaEndereco(data.getIdPredio());
 
-                ValorTarifa rv = rateValueRepository.findByDateBetween(
-                        LocalDateTime.of(data.getAno(), data.getMes(), 01, 00, 00),
-                        calculoUltimoDiaMes(data.getMes(), data.getAno()));
+                    ValorTarifa rv = rateValueRepository.findByDateBetween(
+                            LocalDateTime.of(data.getAno(), data.getMes(), 01, 00, 00),
+                            calculoUltimoDiaMes(data.getMes(), data.getAno()));
 
-                relatorio += String.format("%s;%s;Bandeira - %s\n\n", "AUTG", "0" + data.getMes() + "/" + data.getAno(), rv.getBandeira());
+                    relatorio += String.format("%s;%s;Bandeira - %s\n\n", "AUTG", "0" + data.getMes() + "/" + data.getAno(), rv.getBandeira());
 
-                relatorio += String.format("%s;%s;%s\n", "Nome responsavel", "Razao Social", "CNPJ");
-                relatorio += String.format("%s;%s;%s\n\n", dadosEmpresaPredioGestor.get(0).getNomeGestor(), dadosEmpresaPredioGestor.get(0).getNomeEmpresa(),
-                        dadosEmpresaPredioGestor.get(0).getCnpj());
+                    relatorio += String.format("%s;%s;%s\n", "Nome responsavel", "Razao Social", "CNPJ");
+                    relatorio += String.format("%s;%s;%s\n\n", dadosEmpresaPredioGestor.get(0).getNomeGestor(), dadosEmpresaPredioGestor.get(0).getNomeEmpresa(),
+                            dadosEmpresaPredioGestor.get(0).getCnpj());
 
-                relatorio += String.format("%s;%s;%s;%s\n", "Nome do predio", "Logradouro", "Numero", "CEP");
-                relatorio += String.format("%s;%s;%d;%s\n\n", dadosEmpresaPredioGestor.get(0).getNomePredio(), dadosEmpresaEndereco.getEnderecoPredio(),
-                        dadosEmpresaEndereco.getNumeroEnderecoPredio(), dadosEmpresaEndereco.getCep());
+                    relatorio += String.format("%s;%s;%s;%s\n", "Nome do predio", "Logradouro", "Numero", "CEP");
+                    relatorio += String.format("%s;%s;%d;%s\n\n", dadosEmpresaPredioGestor.get(0).getNomePredio(), dadosEmpresaEndereco.getEnderecoPredio(),
+                            dadosEmpresaEndereco.getNumeroEnderecoPredio(), dadosEmpresaEndereco.getCep());
 
-                List<DadoConsumoMes> listaLength = repository.infoConsumoMes(data.getIdPredio());
-                if (!(listaLength.isEmpty())) {
-                    ListaObj<DadoConsumoMes> corpo2 = new ListaObj<>(listaLength.size());
-                    for (DadoConsumoMes mc : listaLength) {
-                        corpo2.adiciona(mc);
+                    List<DadoConsumoMes> listaLength = repository.infoConsumoMes(data.getIdPredio());
+                    if (!(listaLength.isEmpty())) {
+                        ListaObj<DadoConsumoMes> corpo2 = new ListaObj<>(listaLength.size());
+                        for (DadoConsumoMes mc : listaLength) {
+                            corpo2.adiciona(mc);
+                        }
+
+                        relatorio += String.format("%s;%s;%s;%s\n", "Sala", "Andar", "Consumo kwm", "Preco");
+                        for (int i = 0; i < corpo2.getTamanho(); i++) {
+                            DadoConsumoMes mc = corpo2.getElemento(i);
+                            mc.setConsumoKwm(setTotalKwm);
+                            relatorio += String.format("%s;%d;", mc.getName(), mc.getFloor());
+                            relatorio += String.format("%012.2f;", mc.getConsumoKwm());
+                            relatorio += String.format("%012.2f\n", mc.getPreco());
+                            totalKwm += mc.getConsumoKwm();
+                            totalReais += mc.getPreco();
+                        }
+
+                        relatorio += String.format("\n%s;%s\n", "Resumo", "R$");
+                        relatorio += String.format("%s;%.2f\n", "Total - kwm: ", totalKwm);
+                        relatorio += String.format("%s;%.2f\n", "Total - R$: ", totalReais);
+                    } else {
+                        // Lista vázia
+                        return ResponseEntity.status(204).build();
                     }
-
-                    relatorio += String.format("%s;%s;%s;%s\n", "Sala", "Andar", "Consumo kwm", "Preco");
-                    for (int i = 0; i < corpo2.getTamanho(); i++) {
-                        DadoConsumoMes mc = corpo2.getElemento(i);
-                        mc.setConsumoKwm(setTotalKwm);
-                        relatorio += String.format("%s;%d;", mc.getName(), mc.getFloor());
-                        relatorio += String.format("%012.2f;", mc.getConsumoKwm());
-                        relatorio += String.format("%012.2f\n", mc.getPreco());
-                        totalKwm += mc.getConsumoKwm();
-                        totalReais += mc.getPreco();
-                    }
-
-                    relatorio += String.format("\n%s;%s\n", "Resumo", "R$");
-                    relatorio += String.format("%s;%.2f\n", "Total - kwm: ", totalKwm);
-                    relatorio += String.format("%s;%.2f\n", "Total - R$: ", totalReais);
                 } else {
-                    // Lista vázia
+                    // Mês sem registro
                     return ResponseEntity.status(204).build();
                 }
-
             } else {
                 // Id inexistente
                 return ResponseEntity.status(404).build();
@@ -115,7 +119,7 @@ public class FormattedReportService {
         LocalDateTime d1 = null;
         LocalDateTime d2 = null;
         Double potencia = null;
-        List<Registro> lista = registerRepository.findByDateBetween(
+        List<Registro> lista = registerRepository.findByDataBetween(
                 LocalDateTime.of(
                         data.getAno(),
                         data.getMes(),
@@ -131,20 +135,20 @@ public class FormattedReportService {
 
                 for (int i = 0; i < lista.size(); i++) {
 
-                    if (lista.get(i).isOn() &&
-                            lista.get(i).getEquipment().getClnBox().getIdCLNBox()
+                    if (lista.get(i).isLigado() &&
+                            lista.get(i).getEquipamento().getClnBox().getIdCLNBox()
                                     == clnBox.get(j).getIdCLNBox()) {
 
-                        d1 = LocalDateTime.of(lista.get(i).getDate().getYear(), lista.get(i).getDate().getMonth(),
-                                lista.get(i).getDate().getDayOfMonth(),
-                                lista.get(i).getDate().getHour(), lista.get(i).getDate().getMinute());
+                        d1 = LocalDateTime.of(lista.get(i).getData().getYear(), lista.get(i).getData().getMonth(),
+                                lista.get(i).getData().getDayOfMonth(),
+                                lista.get(i).getData().getHour(), lista.get(i).getData().getMinute());
 
-                    } else if (lista.get(i).getEquipment().getClnBox().getIdCLNBox()
+                    } else if (lista.get(i).getEquipamento().getClnBox().getIdCLNBox()
                             == clnBox.get(j).getIdCLNBox()) {
 
-                        d2 = LocalDateTime.of(lista.get(i).getDate().getYear(),
-                                lista.get(i).getDate().getMonth(), lista.get(i).getDate().getDayOfMonth(),
-                                lista.get(i).getDate().getHour(), lista.get(i).getDate().getMinute());
+                        d2 = LocalDateTime.of(lista.get(i).getData().getYear(),
+                                lista.get(i).getData().getMonth(), lista.get(i).getData().getDayOfMonth(),
+                                lista.get(i).getData().getHour(), lista.get(i).getData().getMinute());
                     }
 
                     if (d1 != null && d2 != null) {
@@ -199,88 +203,92 @@ public class FormattedReportService {
 
         try {
             if (!(repository.existsById(data.getIdPredio()))) {
-                InfoEmpresaRelatorio dadosEmpresaEndereco = new InfoEmpresaRelatorio(null, null, null, null);
-                List<InfoEmpresaRelatorio> dadosEmpresaPredioGestor = new ArrayList<>();
-                try {
-                    dadosEmpresaEndereco = enderecoRepository.infoEmpresaEndereco(data.getIdPredio());
-                    dadosEmpresaPredioGestor = predioRepository.infoPredioEmpresaGestor(data.getIdPredio());
-                } catch (Exception e) {
-                    System.out.println("Erro ao puxar os dados do servidor: " + e);
-                    return ResponseEntity.status(500).body("Erro ao puxar os dados do servidor - Consulte o ADM");
-                }
-
-                List<DadoConsumoMes> listaLength = repository.infoConsumoMes(data.getIdPredio());
-                ValorTarifa rv = rateValueRepository.findByDateBetween(
-                        LocalDateTime.of(data.getAno(), data.getMes(), 01, 00, 00),
-                        calculoUltimoDiaMes(data.getMes(), data.getAno()));
-
-                String header = "00Relatorio_AUTG";
-                header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-                header += "00";
-                gravaRelatorio(header, "relatorio.txt");
-
-                String corpo1 = "02";
-                corpo1 += String.format("%-5.5s", "AUTG");
-                corpo1 += String.format("%-9.9s", data.getMes() + "/" + data.getAno());
-                corpo1 += String.format("%-25.25s", "Bandeira - " + rv.getBandeira());
-                gravaRelatorio(corpo1, "relatorio.txt");
-                contaCorpo++;
-
-                String corpo2 = "03";
-                corpo2 += String.format("%-25.25s", dadosEmpresaPredioGestor.get(0).getNomeGestor());
-                corpo2 += String.format("%-35.35s", dadosEmpresaPredioGestor.get(0).getNomeEmpresa());
-                corpo2 += String.format("%-14.14s", dadosEmpresaPredioGestor.get(0).getCnpj());
-                gravaRelatorio(corpo2, "relatorio.txt");
-                contaCorpo++;
-
-                String corpo3 = "04";
-                corpo3 += String.format("%-25.25s", dadosEmpresaPredioGestor.get(0).getNomePredio());
-                corpo3 += String.format("%-35.35s", dadosEmpresaEndereco.getEnderecoPredio());
-                corpo3 += String.format("%05d", dadosEmpresaEndereco.getNumeroEnderecoPredio());
-                corpo3 += String.format("%-8.8s", dadosEmpresaEndereco.getCep());
-                gravaRelatorio(corpo3, "relatorio.txt");
-                contaCorpo++;
-
-                if (!(listaLength.isEmpty())) {
-                    ListaObj<DadoConsumoMes> dadosSala = new ListaObj<>(listaLength.size());
-                    for (DadoConsumoMes mc : listaLength) {
-                        dadosSala.adiciona(mc);
+                if (registroDeMesExiste(registerRepository, data)) {
+                    InfoEmpresaRelatorio dadosEmpresaEndereco = new InfoEmpresaRelatorio(null, null, null, null);
+                    List<InfoEmpresaRelatorio> dadosEmpresaPredioGestor = new ArrayList<>();
+                    try {
+                        dadosEmpresaEndereco = enderecoRepository.infoEmpresaEndereco(data.getIdPredio());
+                        dadosEmpresaPredioGestor = predioRepository.infoPredioEmpresaGestor(data.getIdPredio());
+                    } catch (Exception e) {
+                        System.out.println("Erro ao puxar os dados do servidor: " + e);
+                        return ResponseEntity.status(500).body("Erro ao puxar os dados do servidor - Consulte o ADM");
                     }
 
-                    String corpo4;
-                    Double totalKwm = 0.0;
-                    Double totalReais = 0.0;
-                    for (int i = 0; i < dadosSala.getTamanho(); i++) {
-                        corpo4 = "05";
-                        DadoConsumoMes mc = dadosSala.getElemento(i);
-                        mc.setConsumoKwm(setTotalKwm);
-                        corpo4 += String.format("%-25.25s", mc.getName());
-                        corpo4 += String.format("%03d", mc.getFloor());
-                        corpo4 += String.format("%012.2f", mc.getConsumoKwm());
-                        corpo4 += String.format("%012.2f", mc.getPreco());
-                        totalKwm += mc.getConsumoKwm();
-                        totalReais += mc.getPreco();
-                        contaCorpo++;
-                        gravaRelatorio(corpo4, "relatorio.txt");
-                    }
+                    List<DadoConsumoMes> listaLength = repository.infoConsumoMes(data.getIdPredio());
+                    ValorTarifa rv = rateValueRepository.findByDateBetween(
+                            LocalDateTime.of(data.getAno(), data.getMes(), 01, 00, 00),
+                            calculoUltimoDiaMes(data.getMes(), data.getAno()));
 
-                    String corpo5 = "06";
-                    corpo5 += String.format("%012.2f", totalKwm);
-                    corpo5 += String.format("%012.2f", totalReais);
-                    gravaRelatorio(corpo5, "relatorio.txt");
+                    String header = "00Relatorio_AUTG";
+                    header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+                    header += "00";
+                    gravaRelatorio(header, "relatorio.txt");
+
+                    String corpo1 = "02";
+                    corpo1 += String.format("%-5.5s", "AUTG");
+                    corpo1 += String.format("%-9.9s", data.getMes() + "/" + data.getAno());
+                    corpo1 += String.format("%-25.25s", "Bandeira - " + rv.getBandeira());
+                    gravaRelatorio(corpo1, "relatorio.txt");
                     contaCorpo++;
 
-                    String trailer = "01";
-                    trailer += String.format("%07d", contaCorpo);
-                    gravaRelatorio(trailer, nomeArq);
+                    String corpo2 = "03";
+                    corpo2 += String.format("%-25.25s", dadosEmpresaPredioGestor.get(0).getNomeGestor());
+                    corpo2 += String.format("%-35.35s", dadosEmpresaPredioGestor.get(0).getNomeEmpresa());
+                    corpo2 += String.format("%-14.14s", dadosEmpresaPredioGestor.get(0).getCnpj());
+                    gravaRelatorio(corpo2, "relatorio.txt");
+                    contaCorpo++;
 
-                    resource = new InputStreamResource(new FileInputStream(new File("relatorio.txt")));
+                    String corpo3 = "04";
+                    corpo3 += String.format("%-25.25s", dadosEmpresaPredioGestor.get(0).getNomePredio());
+                    corpo3 += String.format("%-35.35s", dadosEmpresaEndereco.getEnderecoPredio());
+                    corpo3 += String.format("%05d", dadosEmpresaEndereco.getNumeroEnderecoPredio());
+                    corpo3 += String.format("%-8.8s", dadosEmpresaEndereco.getCep());
+                    gravaRelatorio(corpo3, "relatorio.txt");
+                    contaCorpo++;
 
+                    if (!(listaLength.isEmpty())) {
+                        ListaObj<DadoConsumoMes> dadosSala = new ListaObj<>(listaLength.size());
+                        for (DadoConsumoMes mc : listaLength) {
+                            dadosSala.adiciona(mc);
+                        }
+
+                        String corpo4;
+                        Double totalKwm = 0.0;
+                        Double totalReais = 0.0;
+                        for (int i = 0; i < dadosSala.getTamanho(); i++) {
+                            corpo4 = "05";
+                            DadoConsumoMes mc = dadosSala.getElemento(i);
+                            mc.setConsumoKwm(setTotalKwm);
+                            corpo4 += String.format("%-25.25s", mc.getName());
+                            corpo4 += String.format("%03d", mc.getFloor());
+                            corpo4 += String.format("%012.2f", mc.getConsumoKwm());
+                            corpo4 += String.format("%012.2f", mc.getPreco());
+                            totalKwm += mc.getConsumoKwm();
+                            totalReais += mc.getPreco();
+                            contaCorpo++;
+                            gravaRelatorio(corpo4, "relatorio.txt");
+                        }
+
+                        String corpo5 = "06";
+                        corpo5 += String.format("%012.2f", totalKwm);
+                        corpo5 += String.format("%012.2f", totalReais);
+                        gravaRelatorio(corpo5, "relatorio.txt");
+                        contaCorpo++;
+
+                        String trailer = "01";
+                        trailer += String.format("%07d", contaCorpo);
+                        gravaRelatorio(trailer, nomeArq);
+
+                        resource = new InputStreamResource(new FileInputStream(new File("relatorio.txt")));
+
+                    } else {
+                        // Lista vázia
+                        return ResponseEntity.status(204).build();
+                    }
                 } else {
-                    // Lista vázia
+                    // Mês sem registro
                     return ResponseEntity.status(204).build();
                 }
-
             } else {
                 // Id inexistente
                 return ResponseEntity.status(404).build();
@@ -452,10 +460,6 @@ public class FormattedReportService {
         TabelaConsumo tc = null;
         Double setTotalKwm = totalLampadaLigada(data, registroRepository, equipamentoRepository, clnBoxRepository);
 
-        if (setTotalKwm == null) {
-            return ResponseEntity.status(204).build();
-        }
-
         try {
             if (!(repository.existsById(data.getIdPredio()))) {
                 Double totalKwm = 0.0;
@@ -590,7 +594,7 @@ public class FormattedReportService {
     }
 
     public boolean registroDeMesExiste(RegistroRepository registerRepository, EquipamentoRelatorio data) {
-        List<Registro> lista = registerRepository.findByDateBetween(
+        List<Registro> lista = registerRepository.findByDataBetween(
                 LocalDateTime.of(
                         data.getAno(),
                         data.getMes(),

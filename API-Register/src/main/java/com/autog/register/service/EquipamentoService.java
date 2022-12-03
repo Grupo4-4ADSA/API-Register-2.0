@@ -158,7 +158,7 @@ public class EquipamentoService {
         LocalDateTime d1 = null;
         LocalDateTime d2 = null;
         Double potencia = null;
-        List<Registro> lista = registerRepository.findByDateBetween(
+        List<Registro> lista = registerRepository.findByDataBetween(
                 LocalDateTime.of(
                         data.getAno(),
                         data.getMes(),
@@ -174,20 +174,20 @@ public class EquipamentoService {
 
                 for (int i = 0; i < lista.size(); i++) {
 
-                    if (lista.get(i).isOn() &&
-                            lista.get(i).getEquipment().getClnBox().getIdCLNBox()
+                    if (lista.get(i).isLigado() &&
+                            lista.get(i).getEquipamento().getClnBox().getIdCLNBox()
                                     == clnBox.get(j).getIdCLNBox()) {
 
-                        d1 = LocalDateTime.of(lista.get(i).getDate().getYear(), lista.get(i).getDate().getMonth(),
-                                lista.get(i).getDate().getDayOfMonth(),
-                                lista.get(i).getDate().getHour(), lista.get(i).getDate().getMinute());
+                        d1 = LocalDateTime.of(lista.get(i).getData().getYear(), lista.get(i).getData().getMonth(),
+                                lista.get(i).getData().getDayOfMonth(),
+                                lista.get(i).getData().getHour(), lista.get(i).getData().getMinute());
 
-                    } else if (lista.get(i).getEquipment().getClnBox().getIdCLNBox()
+                    } else if (lista.get(i).getEquipamento().getClnBox().getIdCLNBox()
                             == clnBox.get(j).getIdCLNBox()) {
 
-                        d2 = LocalDateTime.of(lista.get(i).getDate().getYear(),
-                                lista.get(i).getDate().getMonth(), lista.get(i).getDate().getDayOfMonth(),
-                                lista.get(i).getDate().getHour(), lista.get(i).getDate().getMinute());
+                        d2 = LocalDateTime.of(lista.get(i).getData().getYear(),
+                                lista.get(i).getData().getMonth(), lista.get(i).getData().getDayOfMonth(),
+                                lista.get(i).getData().getHour(), lista.get(i).getData().getMinute());
                     }
 
                     if (d1 != null && d2 != null) {
@@ -219,7 +219,7 @@ public class EquipamentoService {
     }
 
     public boolean registroDeMesExiste(RegistroRepository registerRepository, EquipamentoRelatorio data) {
-        List<Registro> lista = registerRepository.findByDateBetween(
+        List<Registro> lista = registerRepository.findByDataBetween(
                 LocalDateTime.of(
                         data.getAno(),
                         data.getMes(),

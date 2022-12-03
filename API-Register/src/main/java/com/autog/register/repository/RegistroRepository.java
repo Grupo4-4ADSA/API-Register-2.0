@@ -10,6 +10,6 @@ public interface RegistroRepository extends JpaRepository<Registro, Integer> {
 
     //List<Register> findRegisterByEquipmentAndDateBetween(Integer fkEquipamento, String inicio, String fim);
 
-    List<Registro> findByDateBetween(LocalDateTime inicio, LocalDateTime fim);
+    List<Registro> findByDataBetween(LocalDateTime inicio, LocalDateTime fim);
 
 }
