@@ -63,7 +63,7 @@ public class EquipamentoController {
         return service.deleteEquipmentById(id);
     }
 
-    // Endpoint do Gráfico (Resumo de Consumo)
+    // Endpoint do Gráfico (Consumo Equipamento)
     @PostMapping("/grafico/{idPredio}")
     public ResponseEntity GraficoDeSeisMeses(@PathVariable int idPredio) {
         return new EquipamentoService().dadosGrafico(idPredio,repository, registerRepository, equipamentoRepository,

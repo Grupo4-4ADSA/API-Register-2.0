@@ -506,8 +506,7 @@ public class FormattedReportService {
     }
 
     public ResponseEntity<List<DadoConsumoMes>> informacoesDeConsumo(EquipamentoRelatorio data, EmpresaRepository repository,
-                                                                     RegistroRepository registroRepository, EquipamentoRepository equipamentoRepository,
-                                                                     ValorTarifaRepository valorTarifaRepository, CLNBoxRepository clnBoxRepository) {
+                                                                     RegistroRepository registroRepository, EquipamentoRepository equipamentoRepository, CLNBoxRepository clnBoxRepository) {
 
 
         List<DadoConsumoMes> lista = repository.infoConsumoMes(data.getIdPredio());

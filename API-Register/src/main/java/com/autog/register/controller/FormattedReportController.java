@@ -70,8 +70,8 @@ public class FormattedReportController {
     // Enpoint para tela de Relatório de Consumo (Traz uma lista das salas e seus consumos)
     @PostMapping("/listaconsumo")
     public ResponseEntity listaConsumoSala(@RequestBody EquipamentoRelatorio data) {
-        return new FormattedReportService().informacoesDeConsumo(data, repository, registerRepository, equipamentoRepository,
-                valorRelatorioRepository, clnBoxRepository);
+        return new FormattedReportService().informacoesDeConsumo(data, repository, registerRepository,
+                equipamentoRepository, clnBoxRepository);
     }
 
     // Endpoint do Gráfico (Resumo de Consumo)
