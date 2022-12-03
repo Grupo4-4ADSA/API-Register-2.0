@@ -1,7 +1,6 @@
 package com.autog.register.repository;
 
 import com.autog.register.dto.response.DadoConsumoMes;
-import com.autog.register.dto.response.InfoEmpresaRelatorio;
 import com.autog.register.entity.Empresa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,5 +24,4 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
     @Query("SELECT NEW com.autog.register.dto.response.DadoConsumoMes(s.name, s.floor) " +
             "FROM Empresa e JOIN e.predios p JOIN p.salas s WHERE p.idPredio = ?1")
     List<DadoConsumoMes> infoConsumoMes(int idPredio);
-
 }

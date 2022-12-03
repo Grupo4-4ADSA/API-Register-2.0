@@ -2,9 +2,9 @@ package com.autog.register.controller;
 
 import com.autog.register.dto.request.EquipamentoRequest;
 import com.autog.register.entity.Equipamento;
-import com.autog.register.repository.EmpresaRepository;
-import com.autog.register.repository.PredioRepository;
+import com.autog.register.repository.*;
 import com.autog.register.service.EquipamentoService;
+import com.autog.register.service.FormattedReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +21,17 @@ public class EquipamentoController {
     @Autowired
     private EmpresaRepository repository;
 
-//    @Autowired
-//    private RegisterRepository registerRepository;
+    @Autowired
+    private RegistroRepository registerRepository;
 
     @Autowired
     private PredioRepository buildingRepository;
+
+    @Autowired
+    private CLNBoxRepository clnBoxRepository;
+
+    @Autowired
+    private EquipamentoRepository equipamentoRepository;
 
     @PostMapping
     public ResponseEntity registerEquipment(@RequestBody @Valid Equipamento newEquipment) {
@@ -55,5 +61,12 @@ public class EquipamentoController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteEquipmentById(@PathVariable Integer id) {
         return service.deleteEquipmentById(id);
+    }
+
+    // Endpoint do Gráfico (Resumo de Consumo)
+    @PostMapping("/grafico/{idPredio}")
+    public ResponseEntity GraficoDeSeisMeses(@PathVariable int idPredio) {
+        return new EquipamentoService().dadosGrafico(idPredio,repository, registerRepository, equipamentoRepository,
+                clnBoxRepository);
     }
 }

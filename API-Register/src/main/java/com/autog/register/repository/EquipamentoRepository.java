@@ -1,6 +1,6 @@
 package com.autog.register.repository;
 
-import com.autog.register.entity.CLNBox;
+import com.autog.register.dto.response.DadoConsumoMesEquipamento;
 import com.autog.register.entity.Equipamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,4 +38,8 @@ public interface EquipamentoRepository extends JpaRepository<Equipamento, Intege
             " WHERE e.fkCLNBox IN (SELECT idCLNBox FROM CLNBox c INNER JOIN Sala s on c.fkSala = " +
             "s.idSala INNER JOIN Predio p on s.fkPredio = p.idPredio WHERE idPredio = ?1);")
     List<Equipamento> filtrandoEquipamentoConectadosComCLNBox(Integer idPredio);
+
+    @Query("SELECT NEW com.autog.register.dto.response.DadoConsumoMesEquipamento(equ.nome, equ.tipo, equ.clnBox) " +
+            "FROM Equipamento equ JOIN equ.clnBox cln JOIN cln.sala sal JOIN sal.predio pre WHERE pre.idPredio = ?1 ")
+    List<DadoConsumoMesEquipamento> infoConsumoMesEquipamento(int idPredio);
 }

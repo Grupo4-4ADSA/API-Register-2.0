@@ -120,7 +120,6 @@ public class FormattedReportService {
                         data.getAno(),
                         data.getMes(),
                         01, 00, 00),
-
                 calculoUltimoDiaMes(data.getMes(), data.getAno()));
 
         //Predio predio = predioRepository.findByIdPredio(data.getIdPredio());
@@ -133,14 +132,14 @@ public class FormattedReportService {
                 for (int i = 0; i < lista.size(); i++) {
 
                     if (lista.get(i).isOn() &&
-                            lista.get(i).getEquipment().getIdEquipamento()
+                            lista.get(i).getEquipment().getClnBox().getIdCLNBox()
                                     == clnBox.get(j).getIdCLNBox()) {
 
                         d1 = LocalDateTime.of(lista.get(i).getDate().getYear(), lista.get(i).getDate().getMonth(),
                                 lista.get(i).getDate().getDayOfMonth(),
                                 lista.get(i).getDate().getHour(), lista.get(i).getDate().getMinute());
 
-                    } else if (lista.get(i).getEquipment().getIdEquipamento()
+                    } else if (lista.get(i).getEquipment().getClnBox().getIdCLNBox()
                             == clnBox.get(j).getIdCLNBox()) {
 
                         d2 = LocalDateTime.of(lista.get(i).getDate().getYear(),
@@ -200,12 +199,12 @@ public class FormattedReportService {
 
         try {
             if (!(repository.existsById(data.getIdPredio()))) {
-                InfoEmpresaRelatorio dadosEmpresaEndereco = new InfoEmpresaRelatorio(null, null, null,null);
+                InfoEmpresaRelatorio dadosEmpresaEndereco = new InfoEmpresaRelatorio(null, null, null, null);
                 List<InfoEmpresaRelatorio> dadosEmpresaPredioGestor = new ArrayList<>();
-                try{
+                try {
                     dadosEmpresaEndereco = enderecoRepository.infoEmpresaEndereco(data.getIdPredio());
                     dadosEmpresaPredioGestor = predioRepository.infoPredioEmpresaGestor(data.getIdPredio());
-                }catch(Exception e) {
+                } catch (Exception e) {
                     System.out.println("Erro ao puxar os dados do servidor: " + e);
                     return ResponseEntity.status(500).body("Erro ao puxar os dados do servidor - Consulte o ADM");
                 }
@@ -222,7 +221,7 @@ public class FormattedReportService {
 
                 String corpo1 = "02";
                 corpo1 += String.format("%-5.5s", "AUTG");
-                corpo1 += String.format("%-9.9s", "0" + data.getMes() + "/" + data.getAno());
+                corpo1 += String.format("%-9.9s", data.getMes() + "/" + data.getAno());
                 corpo1 += String.format("%-25.25s", "Bandeira - " + rv.getBandeira());
                 gravaRelatorio(corpo1, "relatorio.txt");
                 contaCorpo++;
@@ -453,6 +452,10 @@ public class FormattedReportService {
         TabelaConsumo tc = null;
         Double setTotalKwm = totalLampadaLigada(data, registroRepository, equipamentoRepository, clnBoxRepository);
 
+        if (setTotalKwm == null) {
+            return ResponseEntity.status(204).build();
+        }
+
         try {
             if (!(repository.existsById(data.getIdPredio()))) {
                 Double totalKwm = 0.0;
@@ -474,7 +477,7 @@ public class FormattedReportService {
 
                     for (int i = 0; i < infoConsumoMes.getTamanho(); i++) {
                         DadoConsumoMes mc = infoConsumoMes.getElemento(i);
-                        mc.setConsumoKwm(setTotalKwm);
+                        mc.setConsumoKwm(setTotalKwm != null ? setTotalKwm : 0.0);
                         totalKwm += mc.getConsumoKwm();
                         totalReais += mc.getPreco();
                     }
@@ -514,8 +517,8 @@ public class FormattedReportService {
             for (DadoConsumoMes mc : lista) {
                 mc.setConsumoKwm(setTotalKwm);
             }
-        }else {
-             // Lista vázia
+        } else {
+            // Lista vázia
             return ResponseEntity.status(204).build();
         }
         return ResponseEntity.status(200).body(lista);
@@ -523,50 +526,60 @@ public class FormattedReportService {
 
 
     public ResponseEntity dadosGrafico(int idPredio, EmpresaRepository repository, RegistroRepository registroRepository,
-                                            EquipamentoRepository equipamentoRepository, CLNBoxRepository clnBoxRepository) {
+                                       EquipamentoRepository equipamentoRepository, CLNBoxRepository clnBoxRepository) {
 
         List<DadoGrafico> listaDadoGrafico = new ArrayList<>();
         DadoGrafico dg = null;
-        Integer inicioDosSeisMeses = LocalDateTime.now().getMonthValue() - 5;
+        Integer inicioDosSeisMeses = LocalDateTime.now().getMonthValue() - 6;
         Integer finalDosSeisMeses = LocalDateTime.now().getMonthValue();
         Integer anoAtual = LocalDateTime.now().getYear();
 
+
         try {
-            for(Integer i = inicioDosSeisMeses; i <= finalDosSeisMeses; i++){
-                EquipamentoRelatorio data = new EquipamentoRelatorio(idPredio,i, anoAtual);
-                Double setTotalKwm = totalLampadaLigada(data, registroRepository, equipamentoRepository, clnBoxRepository);
-                if (!(repository.existsById(data.getIdPredio()))) {
-                    Double totalKwm = 0.0;
-                    Double totalReais = 0.0;
+            for (Integer i = inicioDosSeisMeses; i <= finalDosSeisMeses; i++) {
+                System.out.println("i: " + i);
+                EquipamentoRelatorio data = new EquipamentoRelatorio(idPredio, i, anoAtual);
 
-                    List<DadoConsumoMes> listaLength = repository.infoConsumoMes(data.getIdPredio());
-                    if (!(listaLength.isEmpty())) {
-                        ListaObj<DadoConsumoMes> infoConsumoMes = new ListaObj<>(listaLength.size());
-                        for (DadoConsumoMes mc : listaLength) {
-                            infoConsumoMes.adiciona(mc);
-                        }
-
-                        for (int j = 0; j < infoConsumoMes.getTamanho(); j++) {
-                            DadoConsumoMes mc = infoConsumoMes.getElemento(j);
-                            mc.setConsumoKwm(setTotalKwm);
-                            totalKwm += mc.getConsumoKwm();
-                            totalReais += mc.getPreco();
-                        }
-
-                        dg = new DadoGrafico(data.getMes() + "/" + data.getAno(), totalKwm, totalReais);
-                        listaDadoGrafico.add(dg);
-                    } else {
-                        // Lista vázia
-                        return ResponseEntity.status(204).build();
+                if (registroDeMesExiste(registroRepository, data)) {
+                    if (i == finalDosSeisMeses) {
+                        listaDadoGrafico.remove(0);
                     }
 
-                } else {
-                    // Id inexistente
-                    return ResponseEntity.status(404).build();
+                    Double setTotalKwm = totalLampadaLigada(data, registroRepository, equipamentoRepository, clnBoxRepository);
+
+                    if (!(repository.existsById(data.getIdPredio()))) {
+                        Double totalKwm = 0.0;
+                        Double totalReais = 0.0;
+
+                        List<DadoConsumoMes> listaLength = repository.infoConsumoMes(data.getIdPredio());
+                        if (!(listaLength.isEmpty())) {
+                            ListaObj<DadoConsumoMes> infoConsumoMes = new ListaObj<>(listaLength.size());
+                            for (DadoConsumoMes mc : listaLength) {
+                                infoConsumoMes.adiciona(mc);
+                            }
+
+                            for (int j = 0; j < infoConsumoMes.getTamanho(); j++) {
+                                DadoConsumoMes mc = infoConsumoMes.getElemento(j);
+                                mc.setConsumoKwm(setTotalKwm != null ? setTotalKwm : 0.0);
+                                totalKwm += mc.getConsumoKwm();
+                                totalReais += mc.getPreco();
+                            }
+
+                            dg = new DadoGrafico(data.getMes() + "/" + data.getAno(), totalKwm, totalReais);
+                            listaDadoGrafico.add(dg);
+                        } else {
+                            // Lista vázia
+                            return ResponseEntity.status(204).build();
+                        }
+
+                    } else {
+                        // Id inexistente
+                        return ResponseEntity.status(404).build();
+                    }
                 }
             }
 
-            if(listaDadoGrafico.isEmpty()) {
+            if (listaDadoGrafico.isEmpty()) {
                 return ResponseEntity.status(204).build();
             }
 
@@ -575,5 +588,16 @@ public class FormattedReportService {
             return ResponseEntity.status(500).body("Erro ao puxar os dados do servidor - Consulte o ADM");
         }
         return ResponseEntity.status(200).body(listaDadoGrafico);
+    }
+
+    public boolean registroDeMesExiste(RegistroRepository registerRepository, EquipamentoRelatorio data) {
+        List<Registro> lista = registerRepository.findByDateBetween(
+                LocalDateTime.of(
+                        data.getAno(),
+                        data.getMes(),
+                        01, 00, 00),
+                calculoUltimoDiaMes(data.getMes(), data.getAno()));
+
+        return lista.isEmpty() == true ? false : true;
     }
 }
