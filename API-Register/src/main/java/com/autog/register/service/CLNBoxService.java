@@ -1,5 +1,7 @@
 package com.autog.register.service;
 
+import com.autog.register.dto.response.GenericResponse;
+import com.autog.register.dto.response.SucessResponse;
 import com.autog.register.entity.CLNBox;
 import com.autog.register.repository.CLNBoxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ public class CLNBoxService {
 
     public ResponseEntity registerCLNBox(CLNBox newCLNBox) {
         repository.save(newCLNBox);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(201).body(new SucessResponse("CLNBox cadastrado com sucesso!", newCLNBox));
     }
 
     public ResponseEntity getCLNBox() {
@@ -31,7 +33,7 @@ public class CLNBoxService {
     public ResponseEntity editCLNBox(Integer id, CLNBox newCLNBox) {
         if (repository.existsById(id)) {
             repository.updateCLNBox(id, newCLNBox.getQrCode(), newCLNBox.getIp());
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).body(new GenericResponse(true));
         }
         return ResponseEntity.status(404).build();
     }
@@ -39,7 +41,7 @@ public class CLNBoxService {
     public ResponseEntity deleteCLNBoxById(Integer id) {
         if (repository.existsById(id)) {
             repository.deleteByIdCLNBox(id);
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).body(new GenericResponse(true));
         }
         return ResponseEntity.status(404).build();
     }
@@ -47,7 +49,7 @@ public class CLNBoxService {
     public ResponseEntity updateIpClnBox(int id, String ip) {
         if (repository.existsById(id)) {
             repository.updateIpCLNBox(id,ip);
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).body(new GenericResponse(true));
         }
         return ResponseEntity.status(404).build();
 

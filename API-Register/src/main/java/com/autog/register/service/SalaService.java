@@ -1,6 +1,7 @@
 package com.autog.register.service;
 
 import com.autog.register.dto.request.SalaRequest;
+import com.autog.register.dto.response.GenericResponse;
 import com.autog.register.dto.response.SalaComClnBox;
 import com.autog.register.dto.response.SalaResponse;
 import com.autog.register.dto.response.SucessResponse;
@@ -46,7 +47,7 @@ public class SalaService {
     public ResponseEntity editRoom(Integer id, SalaRequest request) {
         if (repository.existsById(id)) {
             repository.updateRoom(id, request.getName(), request.getFloor());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }
@@ -55,7 +56,7 @@ public class SalaService {
     public ResponseEntity deleteRoom(Integer id) {
         if (repository.existsById(id)) {
             repository.deleteByIdRoom(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }

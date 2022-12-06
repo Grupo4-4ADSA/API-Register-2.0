@@ -3,6 +3,8 @@ package com.autog.register.service;
 import com.autog.register.dto.request.EquipamentoRequest;
 import com.autog.register.dto.response.EquipamentoComRegistro;
 import com.autog.register.dto.response.EquipamentoResponse;
+import com.autog.register.dto.response.GenericResponse;
+import com.autog.register.dto.response.SucessResponse;
 import com.autog.register.entity.Equipamento;
 import com.autog.register.repository.EquipamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ public class EquipamentoService {
 
     public ResponseEntity registerEquipment(Equipamento newEquipment) {
         repository.save(newEquipment);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(201).body(new SucessResponse("Equipamento cadastrado com sucesso!", newEquipment));
     }
 
     public ResponseEntity getEquipmentByPredio(Integer idPredio) {
@@ -82,7 +84,7 @@ public class EquipamentoService {
                     request.getPotencia(),
                     request.getQtdEquipamento()
             );
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }
@@ -90,7 +92,7 @@ public class EquipamentoService {
     public ResponseEntity deleteEquipmentById(Integer id) {
         if (repository.existsById(id)) {
             repository.deleteEquipamento(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }
