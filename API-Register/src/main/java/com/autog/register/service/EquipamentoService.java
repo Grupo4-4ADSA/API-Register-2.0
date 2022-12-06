@@ -2,6 +2,10 @@ package com.autog.register.service;
 
 import com.autog.register.dto.request.EquipamentoRelatorio;
 import com.autog.register.dto.request.EquipamentoRequest;
+import com.autog.register.dto.response.EquipamentoComRegistro;
+import com.autog.register.dto.response.EquipamentoResponse;
+import com.autog.register.dto.response.GenericResponse;
+import com.autog.register.dto.response.SucessResponse;
 import com.autog.register.dto.response.DadoConsumoMesEquipamento;
 import com.autog.register.dto.response.DadoGrafico;
 import com.autog.register.entity.CLNBox;
@@ -30,7 +34,7 @@ public class EquipamentoService {
 
     public ResponseEntity registerEquipment(Equipamento newEquipment) {
         repository.save(newEquipment);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(201).body(new SucessResponse("Equipamento cadastrado com sucesso!", newEquipment));
     }
 
     public ResponseEntity getEquipmentByPredio(Integer idPredio) {
@@ -43,12 +47,23 @@ public class EquipamentoService {
     }
 
     public ResponseEntity getEquipmentBySala(Integer idSala) {
+        FiltroSingleton.getInstancia().setEquipamentoComRegistro(false);
         List<Equipamento> equipments = repository.getEquipamentoBySala(idSala);
 
         if (equipments.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(equipments);
+    }
+
+    public ResponseEntity listarSalasComUltimoRegistro(Integer idSala) {
+        FiltroSingleton.getInstancia().setEquipamentoComRegistro(true);
+        List<Equipamento> equipamentos = repository.getEquipamentoBySala(idSala);
+
+        if (equipamentos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(equipamentos);
     }
 
     public ResponseEntity getEquipment(Integer idEquipamento) {
@@ -69,8 +84,15 @@ public class EquipamentoService {
 
     public ResponseEntity editEquipment(Integer id, EquipamentoRequest request) {
         if (repository.existsById(id)) {
-            repository.updateEquipamento(id, request.getName());
-            return ResponseEntity.ok().build();
+            repository.updateEquipamento(
+                    id,
+                    request.getTipo(),
+                    request.getInstalacao(),
+                    request.getVidaUtil(),
+                    request.getPotencia(),
+                    request.getQtdEquipamento()
+            );
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }
@@ -78,7 +100,7 @@ public class EquipamentoService {
     public ResponseEntity deleteEquipmentById(Integer id) {
         if (repository.existsById(id)) {
             repository.deleteEquipamento(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }

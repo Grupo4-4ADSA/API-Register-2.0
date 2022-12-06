@@ -53,6 +53,11 @@ public class EquipamentoController {
         return service.getEquipment(idEquipment);
     }
 
+    @GetMapping("registro/{idSala}")
+    public ResponseEntity listarSalasComUltimoRegistro(@PathVariable Integer idSala) {
+        return service.listarSalasComUltimoRegistro(idSala);
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity editEquipment(@PathVariable Integer id, @RequestBody @Valid EquipamentoRequest request) {
         return service.editEquipment(id, request);

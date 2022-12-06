@@ -32,7 +32,18 @@ public class Sala {
     @OneToMany(mappedBy = "sala")
     private List<Agendamento> agendamentos = new ArrayList();
 
-    // Relacionamento com predio, clnbox e agendamento
+    @OneToOne(mappedBy = "sala")
+    private CLNBox clnBox;
+
+    @JsonIgnore
+    public CLNBox getClnBox() {
+        return clnBox;
+    }
+
+    public void setClnBox(CLNBox clnBox) {
+        this.clnBox = clnBox;
+    }
+
     @JsonIgnore
     public List<Agendamento> getAgendamentos() {
         return agendamentos;

@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface PredioRepository extends JpaRepository<Predio, Integer> {
 
+    List<Predio> findByIdPredio(Integer idPredio);
+
     @Query("SELECT p FROM Predio p where fkEmpresa = ?1")
     List<Predio> getPredioByEmpresa(Integer idEmpresa);
 

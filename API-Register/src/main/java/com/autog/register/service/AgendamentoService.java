@@ -1,6 +1,8 @@
 package com.autog.register.service;
 
 import com.autog.register.dto.request.EquipamentoRequest;
+import com.autog.register.dto.response.GenericResponse;
+import com.autog.register.dto.response.SucessResponse;
 import com.autog.register.entity.Agendamento;
 import com.autog.register.entity.Equipamento;
 import com.autog.register.repository.AgendamentoRepository;
@@ -18,7 +20,7 @@ public class AgendamentoService {
 
     public ResponseEntity registrarAgendamento(Agendamento novoAgendamento) {
         repository.save(novoAgendamento);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(201).body(new SucessResponse("Agendamento cadastrado com sucesso!", novoAgendamento));
     }
 
     public ResponseEntity listarAgendamentos(Integer idPredio) {
@@ -32,8 +34,8 @@ public class AgendamentoService {
 
     public ResponseEntity editarAgendamento(Integer id, Agendamento request) {
         if (repository.existsById(id)) {
-            repository.updateEquipamento(id, request.getHorario(),request.getData());
-            return ResponseEntity.ok().build();
+            repository.updateEquipamento(id, request.getHorario(),request.getData(), request.getLigar());
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }
@@ -41,7 +43,7 @@ public class AgendamentoService {
     public ResponseEntity deletarAgendamento(Integer id) {
         if (repository.existsById(id)) {
             repository.deletarAgendamento(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
     }

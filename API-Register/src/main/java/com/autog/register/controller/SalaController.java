@@ -21,10 +21,15 @@ public class SalaController {
         return service.registerRoom(newRoom);
     }
     
-//    @GetMapping("/{idBuilding}")
-//    public ResponseEntity listRoomsToOncln(@PathVariable Integer idBuilding) {
-//        return service.listWithClnBox(idBuilding);
-//    }
+    @GetMapping("/{idBuilding}")
+    public ResponseEntity listRoomsToOncln(@PathVariable Integer idBuilding) {
+        return service.listWithClnBox(idBuilding);
+    }
+
+    @GetMapping("/apenas/salas/{idBuilding}")
+    public ResponseEntity listarSalasSemClnBox(@PathVariable Integer idBuilding) {
+        return service.listarSalasSemClnBox(idBuilding);
+    }
 
     @GetMapping("/all/{idBuilding}")
     public ResponseEntity listAllRooms(@PathVariable Integer idBuilding) {

@@ -22,7 +22,7 @@ public class PredioController {
 
     @GetMapping("/{idEmpresa}")
     private ResponseEntity listaPredios(@PathVariable Integer idEmpresa){
-        List<Predio> predios = repository.getPredioByEmpresa(idEmpresa);
+        List<Predio> predios = repository.findByIdPredio(idEmpresa);
         return predios.isEmpty() ? noContent().build() : ok().body(predios);
     }
 
