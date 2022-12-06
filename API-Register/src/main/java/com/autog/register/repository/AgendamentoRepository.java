@@ -23,6 +23,6 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
 
     @Transactional
     @Modifying
-    @Query("UPDATE Agendamento a SET a.horario = ?2, a.data = ?3 WHERE a.idAgendamento = ?1")
-    void updateEquipamento(Integer id, LocalTime horario, LocalDate data);
+    @Query("UPDATE Agendamento a SET a.horario = ?2, a.data = ?3, a.ligar = ?4 WHERE a.idAgendamento = ?1")
+    void updateEquipamento(Integer id, LocalTime horario, LocalDate data, boolean ligar);
 }

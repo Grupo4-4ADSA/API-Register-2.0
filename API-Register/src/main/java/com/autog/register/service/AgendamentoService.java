@@ -34,7 +34,7 @@ public class AgendamentoService {
 
     public ResponseEntity editarAgendamento(Integer id, Agendamento request) {
         if (repository.existsById(id)) {
-            repository.updateEquipamento(id, request.getHorario(),request.getData());
+            repository.updateEquipamento(id, request.getHorario(),request.getData(), request.getLigar());
             return ResponseEntity.ok().body(new GenericResponse(true));
         }
         return ResponseEntity.notFound().build();
