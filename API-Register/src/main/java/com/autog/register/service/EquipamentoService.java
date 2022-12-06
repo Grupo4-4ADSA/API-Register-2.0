@@ -38,6 +38,7 @@ public class EquipamentoService {
     }
 
     public ResponseEntity getEquipmentByPredio(Integer idPredio) {
+        FiltroSingleton.getInstancia().setEquipamentoComRegistro(true);
         List<Equipamento> equipments = repository.getAllEquipments(idPredio);
 
         if (equipments.isEmpty()) {
