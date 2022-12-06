@@ -12,11 +12,6 @@ public interface PredioRepository extends JpaRepository<Predio, Integer> {
 
     List<Predio> findByIdPredio(Integer idPredio);
 
-    @Query("SELECT p FROM Predio p where fkEmpresa = ?1")
-    List<Predio> getPredioByEmpresa(Integer idEmpresa);
-
-    Predio findByIdPredio(Integer idPredio);
-
     @Query("SELECT NEW com.autog.register.dto.response.InfoEmpresaRelatorio(ges.nome, " +
             "emp.razaoSocial, emp.cnpj, pre.nomePredio) " +
             "FROM Predio pre JOIN pre.empresa emp JOIN pre.gestores ges WHERE pre.idPredio = ?1")

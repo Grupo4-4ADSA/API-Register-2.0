@@ -430,7 +430,7 @@ public class FormattedReportService {
                     }
                     System.out.println(rcnr);
 
-                    Predio b = predioRepository.findByIdPredio(idPredio);
+                    Predio b = predioRepository.findByIdPredio(idPredio).get(0);
                     relatorioRepository.save(new Relatorio(rir.getEmpresaPrestadora(), rir.getDataRelatorio(),
                             rir.getBandeira(), rcr.getGestorResponsavel(), rcr.getRazaoSocial(),
                             rcr.getCnpj(), rcnr.getTotalKwm(), rcnr.getTotalReais(),

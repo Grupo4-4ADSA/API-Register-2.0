@@ -56,7 +56,7 @@ public class Equipamento {
     // Relacionamento com sensoPresenca, sensorLuminosidade
 
     public Registro getRegistro() {
-        if (FiltroSingleton.getInstancia().isEquipamentoComRegistro()){
+        if (FiltroSingleton.getInstancia().isEquipamentoComRegistro() && !registros.isEmpty()) {
             return registros.get(registros.size() - 1);
         } else {
             return null;
