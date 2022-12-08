@@ -32,6 +32,9 @@ public class EquipamentoService {
     @Autowired
     private EquipamentoRepository repository;
 
+    @Autowired
+    private RegistroRepository register;
+
     public ResponseEntity registerEquipment(Equipamento newEquipment) {
         repository.save(newEquipment);
         return ResponseEntity.status(201).body(new SucessResponse("Equipamento cadastrado com sucesso!", newEquipment));
@@ -45,6 +48,12 @@ public class EquipamentoService {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(equipments);
+    }
+
+    public ResponseEntity register(Registro newRegistro) {
+        newRegistro.setData(LocalDateTime.now());
+        register.save(newRegistro);
+        return ResponseEntity.status(201).body(new SucessResponse("Registro feito com sucesso!", newRegistro));
     }
 
     public ResponseEntity getEquipmentBySala(Integer idSala) {
@@ -250,6 +259,10 @@ public class EquipamentoService {
                 calculoUltimoDiaMes(data.getMes(), data.getAno()));
 
         return lista.isEmpty() == true ? false : true;
+    }
+
+    public Equipamento getDataEquipment(Integer idEquipment){
+        return repository.getEquipamento(idEquipment).get(0);
     }
 
 

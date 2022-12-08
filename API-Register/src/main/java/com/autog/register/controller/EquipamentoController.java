@@ -2,9 +2,11 @@ package com.autog.register.controller;
 
 import com.autog.register.dto.request.EquipamentoRequest;
 import com.autog.register.entity.Equipamento;
+import com.autog.register.entity.Registro;
 import com.autog.register.repository.*;
 import com.autog.register.service.EquipamentoService;
 import com.autog.register.service.FormattedReportService;
+import feign.Body;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,4 +76,11 @@ public class EquipamentoController {
         return new EquipamentoService().dadosGrafico(idPredio,repository, registerRepository, equipamentoRepository,
                 clnBoxRepository);
     }
+
+    @PostMapping("/acao/{idEquipment}")
+    public ResponseEntity register(@PathVariable int idEquipment,@RequestBody Registro newRegister) {
+        newRegister.setEquipamento(service.getDataEquipment(idEquipment));
+        return service.register(newRegister);
+    }
+
 }

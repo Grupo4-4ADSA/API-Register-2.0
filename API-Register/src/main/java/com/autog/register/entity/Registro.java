@@ -18,12 +18,10 @@ public class Registro {
     @Column(name = "ligado")
     private boolean ligado;
 
-    @NotNull
     @Column(name = "data")
     private LocalDateTime data;
 
     @ManyToOne
-    @NotNull
     @JsonIgnore
     @JoinColumn(name = "fkEquipamento", referencedColumnName = "idEquipamento")
     private Equipamento equipamento;
