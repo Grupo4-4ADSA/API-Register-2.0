@@ -36,6 +36,16 @@ public class EquipamentoService {
     private RegistroRepository register;
 
     public ResponseEntity registerEquipment(Equipamento newEquipment) {
+
+        Integer equipments = repository.countEquipamentosByClnBox(newEquipment.getClnBox());
+
+        if (equipments == 0){
+            newEquipment.setPorta(1);
+        }else {
+            newEquipment.setPorta(equipments + 1);
+        }
+
+
         repository.save(newEquipment);
         return ResponseEntity.status(201).body(new SucessResponse("Equipamento cadastrado com sucesso!", newEquipment));
     }
